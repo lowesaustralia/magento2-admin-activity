@@ -336,18 +336,19 @@ class Processor
      */
     public function modelEditAfter($model)
     {
-        $label = ($this->eventConfig['action'] == self::SAVE_ACTION) ? self::EDIT_ACTION : $this->eventConfig['action'];
-        if ($this->validate($model)) {
-            $logData = $this->handler->modelEdit($model, $this->getMethod());
-            if (!empty($logData)) {
-                $activity = $this->_initActivity($model);
-                $activity->setActionType($label);
-                $activity->setIsRevertable(1);
+        if (!isset($this->eventConfig['action'])) {
+            $label = ($this->eventConfig['action'] == self::SAVE_ACTION) ? self::EDIT_ACTION : $this->eventConfig['action'];
+            if ($this->validate($model)) {
+                $logData = $this->handler->modelEdit($model, $this->getMethod());
+                if (!empty($logData)) {
+                    $activity = $this->_initActivity($model);
+                    $activity->setActionType($label);
+                    $activity->setIsRevertable(1);
 
-                $this->addLog($activity, $logData, $model);
+                    $this->addLog($activity, $logData, $model);
+                }
             }
         }
-
         return $this;
     }
 
